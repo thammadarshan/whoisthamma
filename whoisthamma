@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thamma Darshan - Investor & Product Enthusiast</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* New Font: Inter for main content (professional) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        /* MARQUEE FONT: Josefin Sans - thin, geometric (Keeping the import for safety, but not using it for the marquee) */
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght=700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif; /* Professional font for the main site */
+            background-color: #f7f7f7; 
+            color: #1a1a1a; 
+            min-height: 100vh;
+            scroll-behavior: smooth; 
+        }
+
+        /* Define custom colors */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#1a1a1a',
+                        'subtle-gray': '#737373',
+                        'accent-orange': '#D89B5F', /* Ochre/Orange from the retro palette */
+                        'hover-red': '#C75C4B',    /* Terracotta Red for a subtle hover contrast */
+                        /* NEW ACCENT FOR WHITE TEXT NAV */
+                        'high-contrast-accent': '#E8D5B5', /* Light Gold/Cream for visibility */
+                    },
+                }
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* --- 1. FIXED TOP NAVIGATION & HERO STYLES (ALIGNED) --- */
+        /* ---------------------------------------------------- */
+        
+        /* Hero Section & Image Styles */
+        #hero-background {
+            /* Using placeholder until user provides a public URL for the image */
+            background-image: url('https://placehold.co/1200x800/28282B/FFFFFF?text=YOUR+IMAGE+HERE');
+            background-size: cover;
+            background-position: 50% 50%; 
+            filter: grayscale(100%) contrast(120%); 
+        }
+
+        #hero-background::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            /* Slightly darker overlay to ensure white text is readable */
+            background: rgba(0, 0, 0, 0.45); 
+        }
+
+        /* Fixed Navigation Style - ALIGNMENT FIXES APPLIED HERE */
+        .fixed-nav-item {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500; /* font-medium */
+            line-height: 1.75rem;
+            text-decoration: none;
+            /* Set to relative to anchor the dot/icon container */
+            position: relative; 
+            white-space: nowrap;
+        }
+        
+        /* Wrapper for the word to apply independent zoom and coloring */
+        .nav-text-wrapper {
+            display: inline-block;
+            color: currentColor; 
+            transition: all 0.3s ease-in-out;
+            transform-origin: right center; 
+            position: relative; 
+            height: 1.75rem; 
+            
+            /* CRITICAL FIX: Set a minimum width to ensure all links occupy the same horizontal space */
+            min-width: 90px; 
+            
+            /* Ensure all content inside this wrapper aligns to the right */
+            text-align: right; 
+        }
+        
+        /* Inner spans for the text swap - CRITICAL VERTICAL ALIGNMENT FIX */
+        .nav-text-default, .nav-text-hover {
+            position: absolute;
+            inset: 0;
+            display: block; /* Use block to occupy full space for centering */
+            transition: opacity 0.3s ease-in-out;
+            white-space: nowrap; 
+            
+            /* Stable vertical centering relative to the parent wrapper */
+            top: 50%;
+            transform: translateY(-50%);
+            /* Ensuring the text is still right-aligned within the fixed width */
+            text-align: right;
+        }
+        
+        /* Default text starts visible (white) */
+        .nav-text-default { opacity: 1; } 
+        
+        /* Hover text starts hidden, smaller font */
+        .nav-text-hover { 
+            opacity: 0; 
+            font-size: 0.9em; 
+            /* MICRO-ADJUSTMENT: Nudge the smaller text up 1px for visual center alignment */
+            margin-top: -1px; 
+        }
+
+        /* Text Zoom and Color Change on Hover */
+        .fixed-nav-item:hover .nav-text-wrapper {
+            color: var(--tw-color-high-contrast-accent);
+            transform: scale(1.05); 
+        }
+        
+        /* New Hover Behavior: Swap Text */
+        .fixed-nav-item:hover .nav-text-default { opacity: 0; }
+        .fixed-nav-item:hover .nav-text-hover { opacity: 1; }
+
+        /* Icon Container Style (Starts hidden below the word) - Aligned to the right */
+        .nav-icon-container {
+            position: absolute;
+            bottom: -20px; 
+            right: 5px; 
+            left: auto; 
+            transform: translateX(0) scale(0.5); 
+            opacity: 0; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.27); 
+            height: 16px;
+            width: 16px;
+            color: currentColor; /* Inherit white/accent color */
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Icon Animation on Hover */
+        .fixed-nav-item:hover .nav-icon-container {
+            opacity: 1; 
+            transform: translateX(0) scale(1); 
+            color: var(--tw-color-high-contrast-accent); 
+        }
+
+        /* Style for the Dot itself */
+        .nav-dot {
+            width: 6px; 
+            height: 6px;
+            background-color: currentColor; 
+            border-radius: 50%;
+        }
+        
+        /* Marquee/Scrolling Text Styles (Reverted to Inter font) */
+        .marquee-content {
+            display: inline-block;
+            animation: marquee-scroll 40s linear infinite; 
+            font-size: 3rem; /* 48px */
+            font-weight: 700; 
+            text-transform: uppercase; 
+            line-height: 1;
+            /* Marquee text is white, but subtly transparent over the image */
+            color: rgba(255, 255, 255, 0.85); 
+        }
+
+        /* Footer Marquee Styles (Reverted to Inter font) */
+        .footer-marquee-content {
+            display: inline-block;
+            animation: marquee-scroll 40s linear infinite; 
+            font-size: 3rem; /* 48px - MATCHING */
+            font-weight: 700; 
+            text-transform: uppercase; 
+            line-height: 1;
+            /* Updated color to match the subtle feel of the top one, but white on black */
+            color: rgba(255, 255, 255, 0.2); 
+        }
+
+        @keyframes marquee-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); } 
+        }
+
+        @media (max-width: 640px) {
+            .marquee-content { font-size: 2rem; }
+            .marquee-separator { font-size: 2rem; }
+            .footer-marquee-content { font-size: 2rem; } /* Adjusted for mobile match */
+        }
+        
+        /* ---------------------------------------------------- */
+        /* --- 2. MAIN NAVIGATION & PAGE CONTENT STYLES (NEW) --- */
+        /* ---------------------------------------------------- */
+
+        .nav-link-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem; 
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e5e5; 
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-link-row:hover {
+            background-color: #ededed; 
+        }
+        
+        .nav-link-row:first-child {
+            border-top: 1px solid #e5e5e5; 
+        }
+
+        .main-text-new {
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            transition: all 0.3s ease;
+        }
+
+        .sub-text-new {
+            font-size: 1.125rem; 
+            font-weight: 400;
+            color: #737373; 
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-row:hover .main-text-new {
+            font-size: 2.75rem; 
+            color: #1a1a1a;
+        }
+        
+        .nav-link-row:hover .sub-text-new {
+            color: #1a1a1a;
+        }
+        
+        /* NEW: Hover state for the Go Arrow */
+        .go-arrow {
+            transform: translateX(0);
+            transition: transform 0.3s ease, color 0.3s ease;
+            color: #737373;
+        }
+        .nav-link-row:hover .go-arrow {
+            transform: translateX(10px);
+            color: #D89B5F; /* Accent color */
+        }
+
+
+        /* Styling for the new Dynamic Page Content */
+        #page-content {
+            min-height: 60vh;
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        /* State when content is visible */
+        #page-content.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* NEW: Header Container for flex layout (Header + Back Button) */
+        .page-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 4px solid #1a1a1a;
+        }
+
+        .page-header {
+            font-size: 5rem; /* ~80px */
+            font-weight: 900; 
+            line-height: 1;
+        }
+        
+        /* Styling for the Back Button */
+        .back-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 9999px; /* full rounded */
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .back-button:hover {
+            background-color: #D89B5F; /* accent-orange */
+            color: #1a1a1a;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .back-button:active {
+            transform: scale(0.98);
+        }
+        
+
+        .page-body {
+            font-size: 1.25rem;
+            line-height: 1.75;
+            color: #1a1a1a;
+        }
+        
+        /* Custom Styles for Work Experience Layout */
+        .job-title-highlight {
+            font-weight: 700;
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-size: 1.5rem; /* text-2xl */
+        }
+        
+        .job-meta-line {
+            display: block;
+            color: #737373; /* subtle-gray */
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            font-size: 1rem; /* text-base */
+        }
+        
+        .job-description-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem; /* text-lg */
+            list-style: none; /* Remove default bullet */
+        }
+        
+        /* Custom bullet point using ::before (Solid dot) */
+        .job-description-list li::before {
+            content: '•'; /* Using a cleaner, solid dot */
+            position: absolute;
+            left: 0;
+            color: #D89B5F; /* accent-orange */
+            font-weight: 700;
+            line-height: 1.75rem; /* Match line height for vertical alignment */
+            font-size: 1.25rem; /* Make it slightly larger than normal text */
+        }
+
+
+        @media (max-width: 768px) {
+            .nav-link-row {
+                padding-top: 1.5rem;
+                padding-bottom: 1.5rem;
+                flex-direction: column; 
+                align-items: flex-start;
+            }
+            .main-text-new {
+                font-size: 1.75rem;
+            }
+            .nav-link-row:hover .main-text-new {
+                font-size: 1.875rem;
+            }
+            .sub-text-new {
+                font-size: 0.875rem; 
+                margin-top: 0.25rem; 
+            }
+            .page-header-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .page-header {
+                font-size: 3rem;
+                margin-bottom: 0;
+            }
+            .back-button {
+                margin-left: 0;
+                margin-top: 0.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .job-title-highlight {
+                font-size: 1.25rem;
+            }
+            
+            .job-description-list li {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 1. INTRO / HEADER SECTION (Full viewport height - h-screen) -->
+    <section id="hero" class="relative w-full h-screen flex flex-col justify-end mb-20">
+        <!-- Image background layer with overlay -->
+        <div id="hero-background" class="absolute inset-0 z-0">
+            <!-- Image is set via CSS background-image property -->
+        </div>
+        
+        <!-- FIXED TOP NAVIGATION -->
+        <nav class="absolute top-0 z-50 w-full p-6 sm:px-12 text-white">
+            <div class="mx-auto max-w-7xl flex justify-between items-center">
+                <!-- Left Side: Name/Logo - Added JS to return to main view -->
+                <a href="#" id="home-logo" class="text-xl sm:text-2xl font-black tracking-tight hover:text-high-contrast-accent transition duration-200">
+                    THAMMA DARSHAN
+                </a>
+                
+                <!-- Right Side: Navigation Links -->
+                <div class="flex items-center justify-end ml-auto space-x-6">
+                    
+                    <!-- WORK LINK -->
+                    <a href="#new-work" class="fixed-nav-item">
+                        <span class="nav-text-wrapper">
+                            <span class="nav-text-default">Work</span>
+                            <span class="nav-text-hover">09-17</span> 
+                        </span>
+                        <span class="nav-icon-container">
+                            <div class="nav-dot"></div>
+                        </span>
+                    </a>
+                    
+                    <!-- ABOUT LINK -->
+                    <a href="#about-content" class="fixed-nav-item">
+                        <span class="nav-text-wrapper">
+                            <span class="nav-text-default">About</span>
+                            <span class="nav-text-hover">Who is Thamma</span>
+                        </span>
+                        <span class="nav-icon-container">
+                            <div class="nav-dot"></div>
+                        </div>
+                    </a>
+                    
+                    <!-- CONNECT LINK -->
+                    <a href="#connect-content" class="fixed-nav-item">
+                        <span class="nav-text-wrapper">
+                            <span class="nav-text-default">Connect</span>
+                            <span class="nav-text-hover">Nice to meet you</span>
+                        </span>
+                        <span class="nav-icon-container">
+                            <div class="nav-dot"></div>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MARQUEE POSITION: Absolute, over the image, at the BOTTOM -->
+        <div class="absolute bottom-0 left-0 right-0 z-20 overflow-hidden whitespace-nowrap w-full py-6">
+            <div class="marquee-content">
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> HELLO </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> HOLA </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> BONJOUR </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> नमस्ते </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> こんにちは </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> GUTEN TAG </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> OLÁ </span>
+                
+                <!-- Duplication starts here -->
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> HELLO </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> HOLA </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> BONJOUR </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> नमस्ते </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> こんにちは </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> GUTEN TAG </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> OLÁ </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. MAIN CONTENT AREA: NAVIGATION / DYNAMIC PAGE CONTENT TOGGLE -->
+    <main class="max-w-7xl mx-auto px-6 sm:px-8 pb-32">
+        
+        <!-- Container for the Main Navigation (Visible by default) -->
+        <nav id="main-nav-links" class="w-full">
+            
+            <!-- Work -->
+            <a href="#" class="nav-link-row group" data-page="Work"> 
+                <span class="main-text-new">Work</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Investor, Product Leader, Strategy</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+
+            <!-- Musings -->
+            <a href="#" class="nav-link-row group" data-page="Musings">
+                <span class="main-text-new">Musings</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Reflections, Frameworks, Theses</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+
+            <!-- Projects -->
+            <a href="#" class="nav-link-row group" data-page="Projects">
+                <span class="main-text-new">Projects</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Building, Shipping, Learning</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+
+            <!-- Interests -->
+            <a href="#" class="nav-link-row group" data-page="Interests">
+                <span class="main-text-new">Interests</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Minimalism, Philosophy, FinTech</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+            
+            <!-- Books -->
+            <a href="#" class="nav-link-row group" data-page="Books">
+                <span class="main-text-new">Books</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">What I'm reading and recommending</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+            
+            <!-- Fitness -->
+            <a href="#" class="nav-link-row group" data-page="Fitness">
+                <span class="main-text-new">Fitness</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Cycling, Training, Wellness</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+
+            <!-- Community -->
+            <a href="#" class="nav-link-row group" data-page="Community">
+                <span class="main-text-new">Community</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Networks, Collaboration, Shared Interests</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+            
+            <!-- Favourite people -->
+            <a href="#" class="nav-link-row group" data-page="Favourite people">
+                <span class="main-text-new">Favourite people</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Mentors, Builders, Thinkers</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+
+            <!-- NEW DUMMY LINKS -->
+            <a href="#" class="nav-link-row group" data-page="Lorem Ipsum 1">
+                <span class="main-text-new">Lorem Ipsum 1</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Dummy link for future use</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+            <a href="#" class="nav-link-row group" data-page="Lorem Ipsum 2">
+                <span class="main-text-new">Lorem Ipsum 2</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Dummy link for future use</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+            <a href="#" class="nav-link-row group" data-page="Lorem Ipsum 3">
+                <span class="main-text-new">Lorem Ipsum 3</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Dummy link for future use</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+            <a href="#" class="nav-link-row group" data-page="Lorem Ipsum 4">
+                <span class="main-text-new">Lorem Ipsum 4</span>
+                <span class="flex items-center space-x-4">
+                    <span class="sub-text-new">Dummy link for future use</span>
+                    <svg class="go-arrow w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
+            </a>
+            
+        </nav>
+
+        <!-- Dynamic Content Container (Hidden by default) -->
+        <section id="page-content" class="hidden">
+            
+            <!-- NEW: Header and Back Button Container -->
+            <div class="page-header-container">
+                <h1 id="page-content-header" class="page-header"></h1>
+                
+                <!-- Back Button (Updated text from 'Back to Hub' to 'Back to Main') -->
+                <button onclick="showMainNavigation()" class="back-button">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Main
+                </button>
+            </div>
+            
+            <div id="page-content-body" class="page-body">
+                <!-- Content will be injected here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- HIDDEN SECTIONS FOR SCROLL TARGETS (The old fixed nav targets) -->
+    <section id="about-content" class="h-screen/2 w-full bg-white flex items-center justify-center hidden"></section>
+    <section id="connect-content" class="h-screen/2 w-full bg-white flex items-center justify-center hidden"></section>
+
+
+    <!-- NEW LARGE FOOTER -->
+    <footer id="main-footer" class="w-full bg-black text-white min-h-[85vh] relative pt-24 pb-4 overflow-hidden flex flex-col justify-between">
+        
+        <!-- Marquee Row -->
+        <div class="absolute top-0 left-0 right-0 z-10 overflow-hidden whitespace-nowrap w-full py-6">
+            <div class="footer-marquee-content">
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> SEE YOU AGAIN </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> ADIOS </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> AU REVOIR </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> फिर मिलेंगे </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> さようなら </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> AUF WIEDERSEHEN </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> TCHAU </span>
+                
+                <!-- Duplication for seamless loop -->
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> SEE YOU AGAIN </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> ADIOS </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> AU REVOIR </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> फिर मिलेंगे </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> さようなら </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> AUF WIEDERSEHEN </span>
+                <span class="mr-6"><span class="text-accent-orange font-bold marquee-separator">&nbsp;-&nbsp;</span> TCHAU </span>
+            </div>
+        </div>
+
+        <!-- 2. Main Content Area -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col justify-center flex-grow pt-[8rem] pb-12">
+            
+            <!-- CTA TITLE -->
+            <h2 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black mb-16 max-w-4xl tracking-tighter">
+                Let's <span class="text-accent-orange">Build</span> & Invest
+            </h2>
+
+            <div class="flex flex-col md:flex-row md:items-center justify-start space-y-12 md:space-y-0 md:space-x-16">
+                
+                <!-- Email & Phone links -->
+                <div class="flex flex-col space-y-4 text-xl sm:text-2xl font-light">
+                    <!-- Updated styling for a clean, underlined effect -->
+                    <a href="mailto:your.email@example.com" class="hover:text-high-contrast-accent transition duration-300 border-b border-gray-700 pb-1 w-fit">hello@thammadarshan.com</a>
+                    <a href="tel:+33123456789" class="hover:text-high-contrast-accent transition duration-300 border-b border-gray-700 pb-1 w-fit">+33 1 23 45 67 89</a>
+                </div>
+
+                <!-- Get in Touch CTA Circle -->
+                <a href="mailto:your.email@example.com" class="relative group w-48 h-48 flex items-center justify-center bg-accent-orange rounded-full shadow-xl transition duration-500 ease-in-out transform hover:scale-105 hover:bg-hover-red">
+                    <span class="text-black text-xl font-bold tracking-tight z-10">Get in Touch</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 3. Metadata Bar -->
+        <div class="relative z-30 w-full border-t border-gray-800 pt-4 pb-4">
+            <div class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-end text-sm font-medium">
+                
+                <!-- Left Column: Location & Status Grid -->
+                <div class="flex flex-col space-y-2 sm:space-y-4 mb-4 sm:mb-0">
+                    <div class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-xs md:text-sm">
+                        <!-- Row 1: Born & Raised -->
+                        <span class="font-semibold text-high-contrast-accent whitespace-nowrap">Born & Raised:</span>
+                        <span class="font-light text-white">Chennai, South India</span>
+                        
+                        <!-- Row 2: Live Location -->
+                        <span class="font-semibold text-high-contrast-accent whitespace-nowrap">Live Location:</span>
+                        <span class="font-light text-white">Paris, France</span>
+                        
+                        <!-- Row 3: Current Status -->
+                        <span class="font-semibold text-high-contrast-accent whitespace-nowrap">Current Status:</span>
+                        <span class="font-light text-white">Studying Msc in International Marketing & Business Development at SKEMA Business School</span>
+                    </div>
+                    <!-- Copyright -->
+                    <span class="text-xs opacity-60 mt-2">© <span id="current-year"></span></span>
+                </div>
+
+                <!-- Right Column: Social Links -->
+                <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-1 sm:space-y-0 items-start sm:items-center text-sm">
+                    <a href="https://twitter.com/[YourHandle]" target="_blank" rel="noopener noreferrer" 
+                       class="text-white hover:text-high-contrast-accent transition duration-200">Twitter</a>
+                    <a href="https://linkedin.com/in/[YourProfile]" target="_blank" rel="noopener noreferrer" 
+                       class="text-white hover:text-high-contrast-accent transition duration-200">LinkedIn</a>
+                    <a href="mailto:your.email@example.com"
+                       class="text-white hover:text-high-contrast-accent transition duration-200">Email</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        const mainNav = document.getElementById('main-nav-links');
+        const pageContent = document.getElementById('page-content');
+        const pageHeader = document.getElementById('page-content-header');
+        const pageBody = document.getElementById('page-content-body');
+        const homeLogo = document.getElementById('home-logo');
+
+        // Function to show the main navigation (initial state)
+        function showMainNavigation() {
+            // Remove the page content
+            pageContent.classList.remove('active');
+            pageContent.classList.add('hidden');
+            
+            // Show the main nav links
+            mainNav.classList.remove('hidden');
+            
+            // Scroll to the main content area (if not already there)
+            document.querySelector('main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Function to show the dynamic page content
+        function showPageContent(pageTitle) {
+            // Hide the main nav links
+            mainNav.classList.add('hidden');
+            
+            // Set the header and content
+            pageHeader.textContent = pageTitle;
+            pageBody.innerHTML = generatePageContent(pageTitle);
+
+            // Show the page content with a short delay for smooth transition
+            pageContent.classList.remove('hidden');
+            setTimeout(() => {
+                pageContent.classList.add('active');
+                // Scroll to the new page content
+                pageContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+        }
+        
+        // Dynamic content generator based on the link clicked
+        function generatePageContent(title) {
+            // Content for the Work page, pulled from the resume
+            if (title === "Work") {
+                return `
+                    <div class="mb-12 border-b-2 border-gray-200 pb-8">
+                        <p class="mb-4 text-xl text-primary-dark">
+                            I'm Thamma Darshan, a blend of <strong>Operational Excellence and Crypto Market Strategy</strong>. My career has focused on driving measurable growth, whether it's optimizing retail logistics to boost revenue by 15% or enhancing brand visibility in the Web3 space to increase inbound deal flow by 30%. I thrive on converting complex data, from cafe operations to on-chain analytics, into clear, actionable strategies that build loyalty and establish thought leadership.
+                        </p>
+                        <p class="text-lg font-medium text-accent-orange">
+                            My focus is on efficiency, strategic growth, and high-impact communication.
+                        </p>
+                    </div>
+                    
+                    <h2 class="text-4xl font-extrabold mb-10 text-primary-dark tracking-tighter">Professional Experience</h2>
+
+                    <!-- Job 1: Operational & Retail Marketing Manager, Table For Tous -->
+                    <div class="mb-12 border-b border-gray-300 pb-8">
+                        <p class="job-title-highlight">Operational & Retail Marketing Manager, Table For Tous</p>
+                        <span class="job-meta-line">Mar 2023 – Nov 2025</span>
+                        <ul class="job-description-list space-y-2">
+                            <li>Led a team of 8 employees, optimizing front-of-house operations and visual merchandising to <strong>boost revenue during peak hours by 15%</strong>.</li>
+                            <li>Oversaw food quality and safety standards, leveraging customer feedback to enhance brand reputation and <strong>increase positive online reviews by 25%</strong>.</li>
+                            <li>Motivated and trained the team on sales and engagement strategies, contributing to a <strong>20% rise in repeat customer visits</strong> and loyalty program growth.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Job 2: Marketing Executive, Momentum 6 -->
+                    <div class="mb-12 border-b border-gray-300 pb-8">
+                        <p class="job-title-highlight">Marketing Executive, Momentum 6</p>
+                        <span class="job-meta-line">Sep 2021 – Mar 2023</span>
+                        <ul class="job-description-list space-y-2">
+                            <li>Managed and mentored a team of four, providing strategic guidance that <strong>increased inbound deal flow by 30%</strong> and enhanced brand visibility within the crypto ecosystem.</li>
+                            <li>Tracked key blockchain trends and analyzed on-chain data, producing proprietary reports that established the firm as a thought leader, <strong>growing the weekly newsletter subscribers by 50%</strong>.</li>
+                            <li>Oversaw and contributed to fundamental analysis of potential portfolio companies' market positioning, delivering data-driven insights.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Job 3: Social Media Influencer, Freelancer -->
+                    <div class="mb-12 border-b border-gray-300 pb-8">
+                        <p class="job-title-highlight">Social Media Influencer, Freelancer</p>
+                        <span class="job-meta-line">Mar 2020 – Sep 2021</span>
+                        <ul class="job-description-list space-y-2">
+                            <li>Self-learned complex crypto market topics and transformed complex financial data into clear, easy-to-understand research articles.</li>
+                            <li>Published daily Twitter threads covering crypto news, trading psychology, and market forecasts, <strong>growing personal account to over 1,500 followers</strong> and garnering <strong>100,000+ lifetime impressions</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Freelance: YouTuber, Freelancer -->
+                    <div class="mb-12">
+                        <p class="job-title-highlight">YouTuber, Freelancer (Content Strategy & Production)</p>
+                        <span class="job-meta-line">Aug 2016 – Apr 2020</span>
+                        <ul class="job-description-list space-y-2">
+                            <li>Managed all content strategy and production, growing the channel to <strong>~1,000 subscribers</strong> and achieving <strong>over 80,000 video views</strong>.</li>
+                            <li>Developed a data-driven content strategy that maximized audience retention and engagement, leading to a consistent increase in daily views.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (title === "Musings") {
+                return `
+                    <p class="mb-6">My <strong>Reflections, Frameworks, and Theses</strong> on building, investing, and living a minimalist life. I explore concepts like compounding attention, the nature of value, and efficient resource allocation.</p>
+                    <p class="mb-6">Expect long-form articles, short opinion pieces, and visual diagrams of mental models that inform my decisions.</p>
+                    <p class="text-subtle-gray">Status: New post published every two weeks.</p>
+                `;
+            } else if (title === "Projects") {
+                return `
+                    <p class="mb-6">A showcase of the personal ventures I'm <strong>Building, Shipping, and Learning</strong> from. These are my side-projects focused on areas like FinTech and productivity tools.</p>
+                    <p class="mb-6">Each project features a problem statement, technology stack, and a roadmap. I believe in learning by doing, and these projects are my proving ground for new ideas.</p>
+                    <p class="text-subtle-gray">Status: Currently developing a micro-investing dashboard (Project Beta).</p>
+                `;
+            } else {
+                // Default content for all other links (Interests, Books, Fitness, Community, etc., and the new Lorem Ipsum links)
+                return `
+                    <p class="mb-6">Welcome to the <strong>${title}</strong> page! This is the placeholder structure you requested, featuring a clean header and a dedicated content area.</p>
+                    <p class="mb-6">You can easily customize the content for this page by modifying the \`generatePageContent(title)\` function in the script block. This allows every link to point to a unique, fully dedicated landing page.</p>
+                    <p class="text-subtle-gray">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.</p>
+                `;
+            }
+        }
+
+
+        // --- Click Handlers ---
+        
+        // 1. New Nav Links Click Handler
+        document.querySelectorAll('.nav-link-row').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                const pageTitle = this.getAttribute('data-page');
+                showPageContent(pageTitle);
+            });
+        });
+
+        // 2. Home Logo Click Handler (Resets the view)
+        homeLogo.addEventListener('click', function(e) {
+            e.preventDefault();
+            showMainNavigation();
+        });
+
+        // 3. Fixed Top Nav Scroll Handler (Still active for the top three links)
+        document.querySelectorAll('.fixed-nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center' 
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
